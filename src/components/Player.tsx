@@ -12,16 +12,16 @@ export default function Player({ track, isPlaying, volume, onTogglePlay, onVolum
   if (!track) return null
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/85 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:gap-4 sm:px-6">
+    <div className="fixed inset-x-0 bottom-0 z-20 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5 sm:pb-4">
+      <div className="glass mx-auto flex max-w-3xl items-center gap-3 rounded-2xl px-3 py-2.5 sm:gap-4 sm:px-4">
         {/* artwork + meta */}
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <div
-            className={`relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-lg bg-gradient-to-br ${track.gradient}`}
+            className={`relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-xl bg-gradient-to-br ${track.gradient} shadow-[0_6px_16px_-6px_rgba(0,0,0,0.6)]`}
           >
             {isPlaying && (
               <span
-                className="absolute inset-0 rounded-lg border-2 border-white/40"
+                className="absolute inset-0 rounded-xl border-2 border-white/40"
                 style={{ animation: 'pulse-ring 1.8s ease-out infinite' }}
               />
             )}

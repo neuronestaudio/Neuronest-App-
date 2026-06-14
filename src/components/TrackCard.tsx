@@ -12,16 +12,17 @@ export default function TrackCard({ track, isActive, isPlaying, onToggle }: Prop
   return (
     <button
       onClick={() => onToggle(track)}
-      className={`group relative flex w-full flex-col gap-3 rounded-2xl border p-3 text-left transition-all duration-200 ${
+      className={`group lift relative flex w-full flex-col gap-3 rounded-3xl p-3 text-left ${
         isActive
-          ? 'border-accent/60 bg-surface-2 shadow-[0_0_0_1px_rgba(124,124,255,0.25)]'
-          : 'border-line bg-surface hover:border-accent/40 hover:bg-surface-2'
+          ? 'glass shadow-[0_0_0_1px_rgba(138,140,242,0.4)]'
+          : 'glass-soft hover:border-accent/40'
       }`}
     >
       <div
-        className={`relative grid aspect-square place-items-center overflow-hidden rounded-xl bg-gradient-to-br ${track.gradient}`}
+        className={`relative grid aspect-square place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${track.gradient} shadow-[0_8px_22px_-10px_rgba(0,0,0,0.6)]`}
       >
-        <span className="text-4xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]">{track.glyph}</span>
+        <span className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
+        <span className="relative text-4xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]">{track.glyph}</span>
 
         {/* play / pause overlay */}
         <span

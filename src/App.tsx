@@ -87,11 +87,13 @@ export default function App() {
 
   return (
     <div className="app-aurora relative min-h-full">
-      <div className="relative z-10 mx-auto max-w-6xl px-4 pb-32 pt-6 sm:px-6 sm:pt-10">
-        {/* header */}
-        <header className="mb-8 flex items-center justify-between">
+      <div className="grain" aria-hidden="true" />
+
+      {/* sticky glass header */}
+      <header className="sticky top-0 z-30 px-3 pt-3 sm:px-5 sm:pt-4">
+        <div className="glass mx-auto flex max-w-6xl items-center justify-between rounded-2xl px-4 py-2.5 sm:px-5">
           <div className="flex items-center gap-2.5">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-2 text-ink">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-2 text-ink shadow-[0_4px_14px_-4px_rgba(138,140,242,0.6)]">
               <svg viewBox="0 0 24 24" className="h-5 w-5">
                 <path
                   d="M4 14h3l2 5 4-14 2 7h5"
@@ -105,25 +107,30 @@ export default function App() {
             </div>
             <span className="font-display text-lg font-semibold tracking-tight">Neuronest</span>
           </div>
-          <span className="rounded-full border border-line px-3 py-1 text-[11px] font-medium text-muted">
+          <span className="glass-soft rounded-full px-3 py-1 text-[11px] font-medium text-muted">
             Prototype
           </span>
-        </header>
+        </div>
+      </header>
 
+      <main className="relative z-10 mx-auto max-w-6xl px-4 pb-36 pt-8 sm:px-6 sm:pt-12">
         {/* hero */}
-        <section className="mb-9">
-          <p className="text-sm text-muted">{greeting}.</p>
-          <h1 className="mt-1 max-w-xl font-display text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-            Sound-engineered focus, on demand.
+        <section className="rise mb-12">
+          <p className="text-sm font-medium text-muted">{greeting}.</p>
+          <h1 className="mt-2 max-w-2xl text-balance font-display text-[2.6rem] font-semibold leading-[1.04] tracking-[-0.03em] sm:text-6xl">
+            Sound-engineered focus,{' '}
+            <span className="bg-gradient-to-r from-accent via-accent to-accent-2 bg-clip-text text-transparent">
+              on demand.
+            </span>
           </h1>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">
+          <p className="mt-5 max-w-md text-pretty text-[15px] leading-relaxed text-muted">
             Pick a soundscape, start the timer, and drop into deep work. Every sound is generated
-            live — no streaming, no buffering.
+            live on your device — no streaming, no buffering.
           </p>
           {!active && (
             <button
               onClick={() => selectTrack(TRACKS[0])}
-              className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:scale-[1.02]"
+              className="lift mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink shadow-[0_12px_30px_-12px_rgba(255,255,255,0.5)]"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4 translate-x-[1px] fill-current">
                 <path d="M8 5v14l11-7z" />
@@ -134,15 +141,15 @@ export default function App() {
         </section>
 
         {/* shared category filter — drives both curated picks and generated sounds */}
-        <div className="mb-7 flex flex-wrap items-center gap-2">
+        <div className="rise mb-8 flex flex-wrap items-center gap-2" style={{ animationDelay: '0.08s' }}>
           {['All', 'Focus', 'Calm', 'Sleep', 'Energy'].map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`rounded-full border px-4 py-1.5 text-xs font-semibold transition ${
+              className={`rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300 ${
                 filter === f
-                  ? 'border-accent bg-accent/15 text-text'
-                  : 'border-line text-muted hover:text-text'
+                  ? 'bg-text text-ink shadow-[0_6px_18px_-8px_rgba(255,255,255,0.5)]'
+                  : 'glass-soft text-muted hover:text-text'
               }`}
             >
               {f}
@@ -150,20 +157,24 @@ export default function App() {
           ))}
         </div>
 
-        <CuratedSection onPlay={openCurated} activeId={curatedTrack?.id ?? null} filter={filter} />
+        <div className="rise" style={{ animationDelay: '0.16s' }}>
+          <CuratedSection onPlay={openCurated} activeId={curatedTrack?.id ?? null} filter={filter} />
+        </div>
 
-        <Dashboard
-          activeId={active?.id ?? null}
-          isPlaying={isPlaying}
-          filter={filter}
-          onToggle={selectTrack}
-        />
-      </div>
+        <div className="rise" style={{ animationDelay: '0.24s' }}>
+          <Dashboard
+            activeId={active?.id ?? null}
+            isPlaying={isPlaying}
+            filter={filter}
+            onToggle={selectTrack}
+          />
+        </div>
+      </main>
 
       {/* feedback launcher — always reachable, sits above the player bar */}
       <button
         onClick={() => setFeedbackOpen(true)}
-        className={`fixed right-4 z-30 flex items-center gap-2 rounded-full border border-line bg-surface-2/90 px-4 py-2.5 text-sm font-semibold shadow-lg backdrop-blur transition hover:border-accent/50 hover:scale-[1.03] sm:right-6 ${
+        className={`glass lift fixed right-4 z-30 flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold sm:right-6 ${
           active ? 'bottom-24' : 'bottom-5'
         }`}
       >

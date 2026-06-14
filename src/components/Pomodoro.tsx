@@ -78,8 +78,8 @@ export default function Pomodoro() {
   }
 
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-line bg-surface p-6">
-      <div className="mb-5 flex gap-1 rounded-full border border-line bg-ink/60 p-1">
+    <div className="glass flex flex-col items-center rounded-3xl p-6">
+      <div className="glass-soft mb-5 flex gap-1 rounded-full p-1">
         {(['focus', 'break'] as Mode[]).map((m) => (
           <button
             key={m}
@@ -110,7 +110,7 @@ export default function Pomodoro() {
           />
         </svg>
         <div className="absolute text-center">
-          <p className="font-display text-3xl font-semibold tabular-nums tracking-tight">
+          <p className="font-mono text-3xl font-medium tabular-nums tracking-tight">
             {fmt(remaining)}
           </p>
           <p className="mt-0.5 text-[11px] uppercase tracking-widest text-muted">
@@ -122,13 +122,13 @@ export default function Pomodoro() {
       <div className="mt-5 flex items-center gap-2">
         <button
           onClick={() => setRunning((r) => !r)}
-          className="rounded-full bg-accent px-7 py-2.5 text-sm font-semibold text-white transition hover:brightness-110"
+          className="lift rounded-full bg-accent px-8 py-2.5 text-sm font-semibold text-ink shadow-[0_10px_26px_-12px_rgba(138,140,242,0.8)]"
         >
           {running ? 'Pause' : 'Start'}
         </button>
         <button
           onClick={reset}
-          className="grid h-10 w-10 place-items-center rounded-full border border-line text-muted transition hover:text-text"
+          className="glass-soft grid h-10 w-10 place-items-center rounded-full text-muted transition hover:text-text active:scale-95"
           aria-label="Reset timer"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">

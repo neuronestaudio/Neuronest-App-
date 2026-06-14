@@ -23,7 +23,7 @@ export default function YouTubePlayer({ track, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl overflow-hidden rounded-t-3xl border border-line bg-surface sm:rounded-3xl"
+        className="glass w-full max-w-2xl overflow-hidden rounded-t-3xl sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* video */}

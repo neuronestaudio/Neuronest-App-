@@ -1,21 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #07080d;
-  --color-surface: #0f111a;
-  --color-surface-2: #161926;
-  --color-line: #242838;
-  --color-muted: #8b90a6;
-  --color-text: #e9ebf4;
-  --color-accent: #7c7cff;
-  --color-accent-2: #36e2c9;
+  /* Surfaces — near-black with a faint cool tint (Apple-style, not pure #000) */
+  --color-ink: #07080c;
+  --color-surface: #0e0f16;
+  --color-surface-2: #15161f;
+  --color-line: #23252f;
+  --color-muted: #9a9fb2;
+  --color-text: #f1f2f7;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", "Inter", sans-serif;
+  /* One considered accent (refined periwinkle) + a teal used sparingly */
+  --color-accent: #8a8cf2;
+  --color-accent-2: #34d8c4;
+
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
 }
 
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 html,
@@ -29,22 +37,103 @@ body {
   background: var(--color-ink);
   color: var(--color-text);
   font-family: var(--font-sans);
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
-/* Animated ambient glow behind the app */
+:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-accent) 80%, white);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ───────────────────────── Ambient background ───────────────────────── */
+/* Soft, low-saturation color wash — tasteful, not the loud AI gradient. */
 .app-aurora::before {
   content: "";
   position: fixed;
-  inset: -20% -10% auto -10%;
-  height: 60vh;
+  inset: -30% -10% auto -10%;
+  height: 75vh;
   background:
-    radial-gradient(40% 60% at 20% 20%, rgba(124, 124, 255, 0.22), transparent 70%),
-    radial-gradient(40% 60% at 85% 10%, rgba(54, 226, 201, 0.18), transparent 70%);
-  filter: blur(40px);
+    radial-gradient(38% 55% at 18% 12%, rgba(138, 140, 242, 0.18), transparent 70%),
+    radial-gradient(36% 50% at 88% 6%, rgba(52, 216, 196, 0.12), transparent 72%),
+    radial-gradient(45% 40% at 55% 0%, rgba(120, 110, 220, 0.1), transparent 75%);
+  filter: blur(30px) saturate(120%);
   pointer-events: none;
   z-index: 0;
+}
+
+/* Fine grain overlay to break digital flatness (fixed, never interactive). */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ───────────────────────── Glassmorphism ───────────────────────── */
+/* Real glass: translucent fill + blur + a 1px edge highlight + tinted shadow. */
+.glass {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.022)
+  );
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.015),
+    0 18px 40px -20px rgba(4, 5, 18, 0.8);
+}
+
+/* Lighter glass for inline chips / small controls. */
+.glass-soft {
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Hover lift with a tinted (not pure-black) shadow + accent glow. */
+.lift {
+  transition:
+    transform 0.32s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.32s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.32s ease;
+  will-change: transform;
+}
+.lift:hover {
+  transform: translateY(-4px);
+  border-color: rgba(138, 140, 242, 0.35);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+    0 24px 50px -24px rgba(60, 56, 140, 0.6),
+    0 0 0 1px rgba(138, 140, 242, 0.12);
+}
+.lift:active {
+  transform: translateY(-1px) scale(0.995);
+}
+
+/* ───────────────────────── Motion ───────────────────────── */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 @keyframes eq {
@@ -56,7 +145,6 @@ body {
     transform: scaleY(1);
   }
 }
-
 .eq-bar {
   transform-origin: bottom;
   animation: eq 0.9s ease-in-out infinite;
@@ -73,6 +161,17 @@ body {
   }
   100% {
     opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

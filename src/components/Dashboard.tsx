@@ -25,7 +25,7 @@ export default function Dashboard({ activeId, isPlaying, filter, onToggle }: Pro
         </div>
 
         {visible.length === 0 ? (
-          <p className="rounded-2xl border border-line bg-surface p-6 text-center text-sm text-muted">
+          <p className="glass-soft rounded-3xl p-6 text-center text-sm text-muted">
             No generated sounds in this category yet.
           </p>
         ) : (
@@ -46,7 +46,7 @@ export default function Dashboard({ activeId, isPlaying, filter, onToggle }: Pro
       {/* right — focus timer + tip */}
       <aside className="flex flex-col gap-5">
         <Pomodoro />
-        <div className="rounded-2xl border border-line bg-gradient-to-br from-surface to-surface-2 p-5">
+        <div className="glass rounded-3xl p-5">
           <p className="font-display text-sm font-semibold">Pair sound with time</p>
           <p className="mt-1.5 text-xs leading-relaxed text-muted">
             Start a 25-minute focus session, press play on a soundscape, and let Neuronest hold

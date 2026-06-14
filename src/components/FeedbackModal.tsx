@@ -75,7 +75,7 @@ export default function FeedbackModal({ open, onClose, playedTracks }: Props) {
       onClick={onClose}
     >
       <div
-        className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-line bg-surface p-6 scrollbar-none sm:rounded-3xl"
+        className="glass max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl p-6 scrollbar-none sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
         {done ? (

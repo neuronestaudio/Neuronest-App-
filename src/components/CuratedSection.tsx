@@ -32,7 +32,7 @@ export default function CuratedSection({ onPlay, activeId, filter }: Props) {
           href={SOUNDHUB_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden shrink-0 rounded-full border border-line px-4 py-2 text-xs font-semibold text-muted transition hover:border-accent/50 hover:text-text sm:inline-block"
+          className="glass-soft hidden shrink-0 rounded-full px-4 py-2 text-xs font-semibold text-muted transition hover:text-text sm:inline-block"
         >
           Full library ↗
         </a>
@@ -43,10 +43,10 @@ export default function CuratedSection({ onPlay, activeId, filter }: Props) {
           <button
             key={track.id}
             onClick={() => onPlay(track)}
-            className={`group relative w-44 shrink-0 overflow-hidden rounded-2xl border text-left transition ${
+            className={`group lift relative w-44 shrink-0 overflow-hidden rounded-3xl text-left ${
               activeId === track.id
-                ? 'border-accent/70 bg-surface-2'
-                : 'border-line bg-surface hover:border-accent/40'
+                ? 'glass shadow-[0_0_0_1px_rgba(138,140,242,0.4)]'
+                : 'glass-soft hover:border-accent/40'
             }`}
           >
             <div className="relative aspect-video overflow-hidden">
