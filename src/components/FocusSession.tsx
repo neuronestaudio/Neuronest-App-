@@ -1,8 +1,11 @@
-import { useState } from 'react'
 import { FOCUS_PRESETS } from '../data/focusPresets'
 import { useFocusSession, type FocusPhase } from '../hooks/useFocusSession'
 
 interface Props {
+  /** shared session instance (created once in App so it survives tab switches) */
+  session: ReturnType<typeof useFocusSession>
+  presetId: string
+  setPresetId: (id: string) => void
   /** label of whatever soundscape is currently playing, if any */
   soundscapeLabel?: string | null
 }
@@ -24,10 +27,9 @@ const STATE_LABEL: Record<FocusPhase, string> = {
   completed: 'Complete',
 }
 
-export default function FocusSession({ soundscapeLabel }: Props) {
-  const [presetId, setPresetId] = useState(FOCUS_PRESETS[0].id)
-  const preset = FOCUS_PRESETS.find((p) => p.id === presetId) ?? FOCUS_PRESETS[0]
-  const s = useFocusSession(preset)
+export default function FocusSession({ session, presetId, setPresetId, soundscapeLabel }: Props) {
+  const s = session
+  const preset = s.preset
 
   const onBreak = s.phase === 'break' || (s.phase === 'paused' && s.pausedFrom === 'break')
   const accent = onBreak || s.phase === 'completed' ? 'var(--color-accent)' : 'var(--color-focus)'

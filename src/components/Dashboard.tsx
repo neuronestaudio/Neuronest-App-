@@ -1,4 +1,5 @@
 import { TRACKS, type Track } from '../data/tracks'
+import type { useFocusSession } from '../hooks/useFocusSession'
 import TrackCard from './TrackCard'
 import FocusSession from './FocusSession'
 
@@ -7,10 +8,22 @@ interface Props {
   isPlaying: boolean
   filter: string
   soundscapeLabel: string | null
+  session: ReturnType<typeof useFocusSession>
+  presetId: string
+  setPresetId: (id: string) => void
   onToggle: (track: Track) => void
 }
 
-export default function Dashboard({ activeId, isPlaying, filter, soundscapeLabel, onToggle }: Props) {
+export default function Dashboard({
+  activeId,
+  isPlaying,
+  filter,
+  soundscapeLabel,
+  session,
+  presetId,
+  setPresetId,
+  onToggle,
+}: Props) {
   const visible = filter === 'All' ? TRACKS : TRACKS.filter((t) => t.category === filter)
 
   return (
@@ -46,7 +59,12 @@ export default function Dashboard({ activeId, isPlaying, filter, soundscapeLabel
 
       {/* right — focus session + tip */}
       <aside className="flex flex-col gap-5">
-        <FocusSession soundscapeLabel={soundscapeLabel} />
+        <FocusSession
+          session={session}
+          presetId={presetId}
+          setPresetId={setPresetId}
+          soundscapeLabel={soundscapeLabel}
+        />
         <div className="glass rounded-3xl p-5">
           <p className="font-display text-sm font-semibold">Pair sound with time</p>
           <p className="mt-1.5 text-xs leading-relaxed text-muted">

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { DEFAULT_PRESET, type FocusPreset } from '../data/focusPresets'
+import { logFocusBlock } from '../pomodoro/store'
 
 // The Focus Session state machine (internally a pomodoro):
 //   idle ──start──▶ focusing ──(timer 0)──▶ break ──(timer 0)──▶ idle | completed
@@ -92,6 +93,9 @@ export function useFocusSession(preset: FocusPreset = DEFAULT_PRESET) {
   const [state, setState] = useState<SessionState>(() => freshState(preset))
   const intervalRef = useRef<number | null>(null)
   const prevPhase = useRef<FocusPhase>('idle')
+  // mirror of state so actions can read current values without re-creating callbacks
+  const stateRef = useRef(state)
+  stateRef.current = state
 
   // One ticking interval, alive only while a phase is actively counting down.
   useEffect(() => {
@@ -107,14 +111,18 @@ export function useFocusSession(preset: FocusPreset = DEFAULT_PRESET) {
     }
   }, [state.phase, preset])
 
-  // Gentle chime on the two transitions that happen on their own.
+  // Gentle chime + analytics on the transitions that happen on their own.
   useEffect(() => {
     const from = prevPhase.current
     const to = state.phase
-    if (to === 'break' && from === 'focusing') gentleChime() // focus → break
+    if (to === 'break' && from === 'focusing') {
+      gentleChime() // focus → break
+      // a full focus block just completed — credit it
+      logFocusBlock({ minutes: preset.focusMinutes, presetId: preset.id, completed: true })
+    }
     if ((to === 'idle' || to === 'completed') && from === 'break') gentleChime() // break → next
     prevPhase.current = to
-  }, [state.phase])
+  }, [state.phase, preset])
 
   // Keep the idle preview in sync when the preset changes (before a session starts).
   useEffect(() => {
@@ -153,8 +161,15 @@ export function useFocusSession(preset: FocusPreset = DEFAULT_PRESET) {
   }, [])
 
   const end = useCallback(() => {
-    setState((s) => ({ ...s, phase: 'completed', pausedFrom: null, secondsLeft: 0 }))
-  }, [])
+    // credit partial focus time if we were mid-focus when ending
+    const s = stateRef.current
+    const wasFocusing = s.phase === 'focusing' || (s.phase === 'paused' && s.pausedFrom === 'focusing')
+    if (wasFocusing) {
+      const elapsedMin = Math.round((s.totalSeconds - s.secondsLeft) / 60)
+      if (elapsedMin >= 1) logFocusBlock({ minutes: elapsedMin, presetId: preset.id, completed: false })
+    }
+    setState((cur) => ({ ...cur, phase: 'completed', pausedFrom: null }))
+  }, [preset])
 
   const skipBreak = useCallback(() => {
     setState((s) => ({

@@ -7,9 +7,9 @@ interface Props {
 }
 
 const catColor: Record<string, string> = {
-  Focus: 'text-accent',
-  Calm: 'text-accent-2',
-  Sleep: 'text-violet-300',
+  Focus: 'text-focus', // orange
+  Calm: 'text-calm', // blue
+  Sleep: 'text-sleep', // violet
 }
 
 export default function CuratedSection({ onPlay, activeId, filter }: Props) {
