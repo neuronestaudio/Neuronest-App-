@@ -7,6 +7,7 @@ import FeedbackModal from './components/FeedbackModal'
 import InsightsView from './components/InsightsView'
 import CuratedSection from './components/CuratedSection'
 import YouTubePlayer from './components/YouTubePlayer'
+import Logo from './components/Logo'
 import type { CuratedTrack } from './data/curated'
 import { logPlay } from './feedback/store'
 
@@ -93,17 +94,8 @@ export default function App() {
       <header className="sticky top-0 z-30 px-3 pt-3 sm:px-5 sm:pt-4">
         <div className="glass mx-auto flex max-w-6xl items-center justify-between rounded-2xl px-4 py-2.5 sm:px-5">
           <div className="flex items-center gap-2.5">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-2 text-ink shadow-[0_4px_14px_-4px_rgba(138,140,242,0.6)]">
-              <svg viewBox="0 0 24 24" className="h-5 w-5">
-                <path
-                  d="M4 14h3l2 5 4-14 2 7h5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-ink text-accent ring-1 ring-accent/25 shadow-[0_0_18px_-4px_rgba(30,215,96,0.55)]">
+              <Logo className="h-6 w-6 drop-shadow-[0_0_4px_rgba(30,215,96,0.6)]" />
             </div>
             <span className="font-display text-lg font-semibold tracking-tight">Neuronest</span>
           </div>
@@ -130,7 +122,7 @@ export default function App() {
           {!active && (
             <button
               onClick={() => selectTrack(TRACKS[0])}
-              className="lift mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink shadow-[0_12px_30px_-12px_rgba(255,255,255,0.5)]"
+              className="lift mt-7 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-ink shadow-[0_12px_34px_-12px_rgba(30,215,96,0.6)]"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4 translate-x-[1px] fill-current">
                 <path d="M8 5v14l11-7z" />
@@ -148,7 +140,7 @@ export default function App() {
               onClick={() => setFilter(f)}
               className={`rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300 ${
                 filter === f
-                  ? 'bg-text text-ink shadow-[0_6px_18px_-8px_rgba(255,255,255,0.5)]'
+                  ? 'bg-accent text-ink shadow-[0_6px_18px_-8px_rgba(30,215,96,0.6)]'
                   : 'glass-soft text-muted hover:text-text'
               }`}
             >

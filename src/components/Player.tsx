@@ -36,7 +36,7 @@ export default function Player({ track, isPlaying, volume, onTogglePlay, onVolum
         {/* play / pause */}
         <button
           onClick={onTogglePlay}
-          className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-ink transition hover:scale-105"
+          className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-accent text-ink shadow-[0_8px_22px_-10px_rgba(30,215,96,0.8)] transition hover:scale-105 active:scale-95"
           aria-label={isPlaying ? 'Pause' : 'Play'}
         >
           {isPlaying ? (
