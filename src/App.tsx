@@ -5,6 +5,9 @@ import Dashboard from './components/Dashboard'
 import Player from './components/Player'
 import FeedbackModal from './components/FeedbackModal'
 import InsightsView from './components/InsightsView'
+import CuratedSection from './components/CuratedSection'
+import YouTubePlayer from './components/YouTubePlayer'
+import type { CuratedTrack } from './data/curated'
 import { logPlay } from './feedback/store'
 
 export default function App() {
@@ -12,6 +15,7 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(0.6)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
+  const [curatedTrack, setCuratedTrack] = useState<CuratedTrack | null>(null)
   const [showInsights, setShowInsights] = useState(
     () => window.location.hash === '#insights',
   )
@@ -30,12 +34,19 @@ export default function App() {
   }, [])
 
   function startTrack(track: Track) {
+    setCuratedTrack(null) // stop any curated YouTube track first
     engine.play(track.type, track.options)
     setIsPlaying(true)
     if (!playedTracks.current.has(track.id)) {
       playedTracks.current.add(track.id)
       logPlay(track.id)
     }
+  }
+
+  function openCurated(track: CuratedTrack) {
+    engine.stop() // generative + curated audio are mutually exclusive
+    setIsPlaying(false)
+    setCuratedTrack(track)
   }
 
   function selectTrack(track: Track) {
@@ -121,6 +132,8 @@ export default function App() {
           )}
         </section>
 
+        <CuratedSection onPlay={openCurated} activeId={curatedTrack?.id ?? null} />
+
         <Dashboard activeId={active?.id ?? null} isPlaying={isPlaying} onToggle={selectTrack} />
       </div>
 
@@ -141,6 +154,8 @@ export default function App() {
         onClose={() => setFeedbackOpen(false)}
         playedTracks={[...playedTracks.current]}
       />
+
+      <YouTubePlayer track={curatedTrack} onClose={() => setCuratedTrack(null)} />
 
       <Player
         track={active}
