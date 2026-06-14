@@ -13,6 +13,9 @@
   --color-accent: #1ed760;
   --color-accent-2: #16a34a;
 
+  /* Focus = warm orange (filter chip + focus-block ring) */
+  --color-focus: #ff8b3d;
+
   --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;

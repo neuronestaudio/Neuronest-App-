@@ -85,6 +85,7 @@ export default function App() {
 
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
+  const soundscapeLabel = curatedTrack?.title ?? active?.title ?? null
 
   return (
     <div className="app-aurora relative min-h-full">
@@ -134,19 +135,27 @@ export default function App() {
 
         {/* shared category filter — drives both curated picks and generated sounds */}
         <div className="rise mb-8 flex flex-wrap items-center gap-2" style={{ animationDelay: '0.08s' }}>
-          {['All', 'Focus', 'Calm', 'Sleep', 'Energy'].map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300 ${
-                filter === f
-                  ? 'bg-accent text-ink shadow-[0_6px_18px_-8px_rgba(30,215,96,0.6)]'
-                  : 'glass-soft text-muted hover:text-text'
-              }`}
-            >
-              {f}
-            </button>
-          ))}
+          {['All', 'Focus', 'Calm', 'Sleep', 'Energy'].map((f) => {
+            const isFocus = f === 'Focus'
+            const active = filter === f
+            return (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300 ${
+                  active
+                    ? isFocus
+                      ? 'bg-focus text-ink shadow-[0_6px_18px_-8px_rgba(255,139,61,0.65)]'
+                      : 'bg-accent text-ink shadow-[0_6px_18px_-8px_rgba(30,215,96,0.6)]'
+                    : isFocus
+                      ? 'glass-soft text-focus hover:brightness-110'
+                      : 'glass-soft text-muted hover:text-text'
+                }`}
+              >
+                {f}
+              </button>
+            )
+          })}
         </div>
 
         <div className="rise" style={{ animationDelay: '0.16s' }}>
@@ -158,6 +167,7 @@ export default function App() {
             activeId={active?.id ?? null}
             isPlaying={isPlaying}
             filter={filter}
+            soundscapeLabel={soundscapeLabel}
             onToggle={selectTrack}
           />
         </div>

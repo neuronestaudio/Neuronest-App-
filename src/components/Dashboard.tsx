@@ -1,15 +1,16 @@
 import { TRACKS, type Track } from '../data/tracks'
 import TrackCard from './TrackCard'
-import Pomodoro from './Pomodoro'
+import FocusSession from './FocusSession'
 
 interface Props {
   activeId: string | null
   isPlaying: boolean
   filter: string
+  soundscapeLabel: string | null
   onToggle: (track: Track) => void
 }
 
-export default function Dashboard({ activeId, isPlaying, filter, onToggle }: Props) {
+export default function Dashboard({ activeId, isPlaying, filter, soundscapeLabel, onToggle }: Props) {
   const visible = filter === 'All' ? TRACKS : TRACKS.filter((t) => t.category === filter)
 
   return (
@@ -43,14 +44,14 @@ export default function Dashboard({ activeId, isPlaying, filter, onToggle }: Pro
         )}
       </section>
 
-      {/* right — focus timer + tip */}
+      {/* right — focus session + tip */}
       <aside className="flex flex-col gap-5">
-        <Pomodoro />
+        <FocusSession soundscapeLabel={soundscapeLabel} />
         <div className="glass rounded-3xl p-5">
           <p className="font-display text-sm font-semibold">Pair sound with time</p>
           <p className="mt-1.5 text-xs leading-relaxed text-muted">
-            Start a 25-minute focus session, press play on a soundscape, and let Neuronest hold
-            the line between you and every distraction.
+            Start a focus block, press play on a soundscape, and let Neuronest hold the line
+            between you and every distraction.
           </p>
         </div>
       </aside>
