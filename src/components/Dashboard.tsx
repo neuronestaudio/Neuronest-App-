@@ -1,57 +1,46 @@
-import { useState } from 'react'
-import { CATEGORIES, TRACKS, type Category, type Track } from '../data/tracks'
+import { TRACKS, type Track } from '../data/tracks'
 import TrackCard from './TrackCard'
 import Pomodoro from './Pomodoro'
 
 interface Props {
   activeId: string | null
   isPlaying: boolean
+  filter: string
   onToggle: (track: Track) => void
 }
 
-type Filter = Category | 'All'
-
-export default function Dashboard({ activeId, isPlaying, onToggle }: Props) {
-  const [filter, setFilter] = useState<Filter>('All')
-  const filters: Filter[] = ['All', ...CATEGORIES]
+export default function Dashboard({ activeId, isPlaying, filter, onToggle }: Props) {
   const visible = filter === 'All' ? TRACKS : TRACKS.filter((t) => t.category === filter)
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
-      {/* left — track library */}
+      {/* left — generative track library */}
       <section>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-display text-lg font-semibold">Soundscapes</h2>
-          <span className="text-xs text-muted">{TRACKS.length} tracks</span>
+          <div>
+            <h2 className="font-display text-lg font-semibold">Generated Soundscapes</h2>
+            <p className="mt-0.5 text-xs text-muted">Made live on your device — no streaming.</p>
+          </div>
+          <span className="text-xs text-muted">{visible.length} tracks</span>
         </div>
 
-        <div className="mb-5 flex gap-2 overflow-x-auto scrollbar-none">
-          {filters.map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`shrink-0 rounded-full border px-4 py-1.5 text-xs font-semibold transition ${
-                filter === f
-                  ? 'border-accent bg-accent/15 text-text'
-                  : 'border-line text-muted hover:text-text'
-              }`}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
-          {visible.map((track) => (
-            <TrackCard
-              key={track.id}
-              track={track}
-              isActive={activeId === track.id}
-              isPlaying={isPlaying}
-              onToggle={onToggle}
-            />
-          ))}
-        </div>
+        {visible.length === 0 ? (
+          <p className="rounded-2xl border border-line bg-surface p-6 text-center text-sm text-muted">
+            No generated sounds in this category yet.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+            {visible.map((track) => (
+              <TrackCard
+                key={track.id}
+                track={track}
+                isActive={activeId === track.id}
+                isPlaying={isPlaying}
+                onToggle={onToggle}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* right — focus timer + tip */}

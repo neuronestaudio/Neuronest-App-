@@ -3,6 +3,7 @@ import { CURATED, SOUNDHUB_URL, ytThumb, type CuratedTrack } from '../data/curat
 interface Props {
   onPlay: (track: CuratedTrack) => void
   activeId: string | null
+  filter: string
 }
 
 const catColor: Record<string, string> = {
@@ -11,7 +12,12 @@ const catColor: Record<string, string> = {
   Sleep: 'text-violet-300',
 }
 
-export default function CuratedSection({ onPlay, activeId }: Props) {
+export default function CuratedSection({ onPlay, activeId, filter }: Props) {
+  const visible = filter === 'All' ? CURATED : CURATED.filter((t) => t.category === filter)
+
+  // nothing curated in this category (e.g. Energy) — hide the section entirely
+  if (visible.length === 0) return null
+
   return (
     <section className="mb-10">
       <div className="mb-1 flex items-end justify-between gap-3">
@@ -33,7 +39,7 @@ export default function CuratedSection({ onPlay, activeId }: Props) {
       </div>
 
       <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-none sm:mx-0 sm:px-0">
-        {CURATED.map((track) => (
+        {visible.map((track) => (
           <button
             key={track.id}
             onClick={() => onPlay(track)}

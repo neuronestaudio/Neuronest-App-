@@ -16,6 +16,7 @@ export default function App() {
   const [volume, setVolume] = useState(0.6)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [curatedTrack, setCuratedTrack] = useState<CuratedTrack | null>(null)
+  const [filter, setFilter] = useState<string>('All')
   const [showInsights, setShowInsights] = useState(
     () => window.location.hash === '#insights',
   )
@@ -132,9 +133,31 @@ export default function App() {
           )}
         </section>
 
-        <CuratedSection onPlay={openCurated} activeId={curatedTrack?.id ?? null} />
+        {/* shared category filter — drives both curated picks and generated sounds */}
+        <div className="mb-7 flex flex-wrap items-center gap-2">
+          {['All', 'Focus', 'Calm', 'Sleep', 'Energy'].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`rounded-full border px-4 py-1.5 text-xs font-semibold transition ${
+                filter === f
+                  ? 'border-accent bg-accent/15 text-text'
+                  : 'border-line text-muted hover:text-text'
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
 
-        <Dashboard activeId={active?.id ?? null} isPlaying={isPlaying} onToggle={selectTrack} />
+        <CuratedSection onPlay={openCurated} activeId={curatedTrack?.id ?? null} filter={filter} />
+
+        <Dashboard
+          activeId={active?.id ?? null}
+          isPlaying={isPlaying}
+          filter={filter}
+          onToggle={selectTrack}
+        />
       </div>
 
       {/* feedback launcher — always reachable, sits above the player bar */}
