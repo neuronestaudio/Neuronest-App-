@@ -11,7 +11,6 @@ import CuratedSection from './components/CuratedSection'
 import CalmEnvironments from './components/CalmEnvironments'
 import YouTubePlayer from './components/YouTubePlayer'
 import PomodoroApp from './components/PomodoroApp'
-import Logo from './components/Logo'
 import type { CuratedTrack } from './data/curated'
 import { logPlay } from './feedback/store'
 
@@ -122,9 +121,11 @@ export default function App() {
       <header className="sticky top-0 z-30 px-3 pt-3 sm:px-5 sm:pt-4">
         <div className="glass mx-auto flex max-w-6xl items-center justify-between gap-2 rounded-2xl px-3 py-2 sm:px-5">
           <button onClick={() => go('home')} className="flex items-center gap-2.5">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-ink text-accent ring-1 ring-accent/25 shadow-[0_0_18px_-4px_rgba(30,215,96,0.55)]">
-              <Logo className="h-6 w-6 drop-shadow-[0_0_4px_rgba(30,215,96,0.6)]" />
-            </div>
+            <img
+              src="/icon-source.png"
+              alt="Neuronest"
+              className="h-9 w-9 rounded-xl ring-1 ring-accent/20 shadow-[0_0_18px_-5px_rgba(30,215,96,0.5)]"
+            />
             <span className="hidden font-display text-lg font-semibold tracking-tight sm:inline">
               Neuronest
             </span>

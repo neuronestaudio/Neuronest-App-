@@ -1,6 +1,6 @@
 // Minimal service worker — makes Neuronest installable and gives a basic
 // offline app shell. Audio is generated in-app (no media files to cache).
-const CACHE = 'neuronest-v1'
+const CACHE = 'neuronest-v2'
 const APP_SHELL = ['/', '/index.html', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png']
 
 self.addEventListener('install', (event) => {
