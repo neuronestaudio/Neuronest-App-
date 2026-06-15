@@ -9,7 +9,7 @@ import FeedbackModal from './components/FeedbackModal'
 import InsightsView from './components/InsightsView'
 import CuratedSection from './components/CuratedSection'
 import CalmEnvironments from './components/CalmEnvironments'
-import YouTubePlayer from './components/YouTubePlayer'
+import YouTubeBar from './components/YouTubeBar'
 import PomodoroApp from './components/PomodoroApp'
 import type { CuratedTrack } from './data/curated'
 import { logPlay } from './feedback/store'
@@ -224,7 +224,7 @@ export default function App() {
       <button
         onClick={() => setFeedbackOpen(true)}
         className={`glass lift fixed right-4 z-30 flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold sm:right-6 ${
-          active ? 'bottom-24' : 'bottom-5'
+          active || curatedTrack ? 'bottom-24' : 'bottom-5'
         }`}
       >
         <span>💬</span>
@@ -238,10 +238,11 @@ export default function App() {
         playedTracks={[...playedTracks.current]}
       />
 
-      <YouTubePlayer track={curatedTrack} onClose={() => setCuratedTrack(null)} />
+      {/* curated YouTube playback (its own bottom bar) — mutually exclusive with the generative player */}
+      {curatedTrack && <YouTubeBar track={curatedTrack} onClose={() => setCuratedTrack(null)} />}
 
       <Player
-        track={active}
+        track={curatedTrack ? null : active}
         isPlaying={isPlaying}
         volume={volume}
         onTogglePlay={togglePlay}
