@@ -117,8 +117,8 @@ export default function App() {
     <div className="app-aurora relative min-h-full">
       <div className="grain" aria-hidden="true" />
 
-      {/* sticky glass header */}
-      <header className="sticky top-0 z-30 px-3 pt-3 sm:px-5 sm:pt-4">
+      {/* sticky glass header — pads for the device notch / status bar (safe-area) */}
+      <header className="sticky top-0 z-30 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 sm:pt-[max(1rem,env(safe-area-inset-top))]">
         <div className="glass mx-auto flex max-w-6xl items-center justify-between gap-2 rounded-2xl px-3 py-2 sm:px-5">
           <button onClick={() => go('home')} className="flex items-center gap-2.5">
             <img
