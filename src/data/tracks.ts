@@ -1,6 +1,6 @@
 import type { SoundOptions, SoundType } from '../audio/engine'
 
-export type Category = 'Focus' | 'Calm' | 'Sleep' | 'Energy'
+export type Category = 'Focus' | 'Calm' | 'Sleep'
 
 export interface Track {
   id: string
@@ -14,7 +14,7 @@ export interface Track {
   glyph: string
 }
 
-export const CATEGORIES: Category[] = ['Focus', 'Calm', 'Sleep', 'Energy']
+export const CATEGORIES: Category[] = ['Focus', 'Calm', 'Sleep']
 
 export const TRACKS: Track[] = [
   {
@@ -41,7 +41,7 @@ export const TRACKS: Track[] = [
     id: 'gamma-boost',
     title: 'Gamma Boost',
     subtitle: 'Sharp recall · 40 Hz binaural',
-    category: 'Energy',
+    category: 'Focus',
     type: 'binaural',
     options: { carrier: 240, beat: 40 },
     gradient: 'from-amber-400 to-orange-600',
