@@ -49,6 +49,25 @@ const STATES: Record<StateKey, { color: string; pre: string; accent: string; sub
   },
 }
 
+// On-device audio diagnostics — only mounts when the URL contains ?debug.
+function DebugBar() {
+  const [s, setS] = useState('starting…')
+  useEffect(() => {
+    const tick = () => setS(engine.snapshot())
+    const id = setInterval(tick, 250)
+    document.addEventListener('visibilitychange', tick)
+    return () => {
+      clearInterval(id)
+      document.removeEventListener('visibilitychange', tick)
+    }
+  }, [])
+  return (
+    <div className="fixed inset-x-2 top-2 z-[60] rounded-lg bg-black/85 px-3 py-2 font-mono text-[10px] leading-snug text-lime-300 backdrop-blur">
+      {s}
+    </div>
+  )
+}
+
 function routeFromHash(): Route {
   const h = window.location.hash
   if (h === '#pomodoro') return 'pomodoro'
@@ -194,6 +213,7 @@ export default function App() {
       style={{ '--state': state.color } as CSSProperties}
     >
       <div className="grain" aria-hidden="true" />
+      {typeof window !== 'undefined' && window.location.search.includes('debug') && <DebugBar />}
 
       {/* sticky glass header — pads for the device notch / status bar (safe-area) */}
       <header className="sticky top-0 z-30 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 sm:pt-[max(1rem,env(safe-area-inset-top))]">

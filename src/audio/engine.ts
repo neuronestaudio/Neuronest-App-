@@ -7,6 +7,23 @@ export class AudioEngine {
   private el: HTMLAudioElement | null = null
   private _volume = 0.6
   private fadeRAF = 0
+  /** last play() outcome — surfaced by the ?debug readout */
+  lastError = '—'
+
+  private track(p: Promise<void> | undefined, tag: string) {
+    if (!p) return
+    p.then(() => (this.lastError = `${tag}:ok`)).catch(
+      (e) => (this.lastError = `${tag}:${e?.name ?? 'err'}`),
+    )
+  }
+
+  /** Live state snapshot for on-device debugging (?debug). */
+  snapshot(): string {
+    const el = this.el
+    const vis = typeof document !== 'undefined' ? document.visibilityState[0] : '?'
+    if (!el) return `vis=${vis} no-el`
+    return `vis=${vis} paused=${el.paused} muted=${el.muted} vol=${el.volume.toFixed(2)} t=${el.currentTime.toFixed(1)} ready=${el.readyState} net=${el.networkState} play=${this.lastError}`
+  }
 
   private ensure(): HTMLAudioElement {
     if (!this.el) {
@@ -75,14 +92,15 @@ export class AudioEngine {
       el.currentTime = 0
     }
     el.loop = true
+    el.muted = false
     cancelAnimationFrame(this.fadeRAF)
     if (this.canFade) {
       el.volume = 0.0001
-      void el.play()
+      this.track(el.play(), 'play')
       this.rampTo(this._volume, 600) // gentle fade-in
     } else {
       el.volume = this._volume // locked screen: full volume immediately
-      void el.play()
+      this.track(el.play(), 'play')
     }
   }
 
@@ -100,26 +118,9 @@ export class AudioEngine {
     const el = this.el
     if (!el || !el.src) return
     cancelAnimationFrame(this.fadeRAF)
+    el.muted = false
     el.volume = this._volume
-
-    // iOS tears down the audio session when an element is paused while the
-    // screen is locked; a plain play() then advances the timeline but stays
-    // silent (no audio route). Re-priming the pipeline (load + seek back)
-    // re-activates output. Only needed while hidden — keep foreground instant.
-    if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
-      const at = el.currentTime
-      const restore = () => {
-        try {
-          el.currentTime = at
-        } catch {
-          /* seek not ready — loop will just resume from 0, but with sound */
-        }
-        el.removeEventListener('loadedmetadata', restore)
-      }
-      el.addEventListener('loadedmetadata', restore)
-      el.load()
-    }
-    void el.play()
+    this.track(el.play(), 'resume')
   }
 
   /** Stop and reset to the start (used when switching away entirely). */
