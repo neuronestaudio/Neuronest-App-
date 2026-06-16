@@ -52,6 +52,13 @@ export class AudioEngine {
     this.fadeRAF = requestAnimationFrame(tick)
   }
 
+  // rAF is frozen while the screen is locked / tab hidden, so a rAF volume
+  // fade would leave audio stuck at ~0 (playing but silent). Only fade when the
+  // page is actually visible; otherwise set volume / pause synchronously.
+  private get canFade() {
+    return typeof document !== 'undefined' && document.visibilityState === 'visible'
+  }
+
   /** Play a soundscape loop by track id, replacing whatever is playing. */
   play(id: string) {
     const el = this.ensure()
@@ -62,19 +69,32 @@ export class AudioEngine {
       el.currentTime = 0
     }
     el.loop = true
-    el.volume = 0.0001
-    void el.play()
-    this.rampTo(this._volume, 600) // gentle fade-in
+    cancelAnimationFrame(this.fadeRAF)
+    if (this.canFade) {
+      el.volume = 0.0001
+      void el.play()
+      this.rampTo(this._volume, 600) // gentle fade-in
+    } else {
+      el.volume = this._volume // locked screen: full volume immediately
+      void el.play()
+    }
   }
 
   stop() {
     const el = this.el
     if (!el) return
-    this.rampTo(0, 250, () => {
-      el.pause()
+    cancelAnimationFrame(this.fadeRAF)
+    if (this.canFade) {
+      this.rampTo(0, 250, () => {
+        el.pause()
+        el.currentTime = 0
+        el.volume = this._volume
+      })
+    } else {
+      el.pause() // locked screen: pause immediately
       el.currentTime = 0
       el.volume = this._volume
-    })
+    }
   }
 }
 
