@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ytThumb, ytWatch, type CuratedTrack } from '../data/curated'
+import { categoryColor } from '../data/tracks'
 
 // Official YouTube IFrame Player API — the supported, reliable way to embed and
 // control YouTube playback (vs. a raw autoplay iframe, which is flaky and often
@@ -131,10 +132,16 @@ export default function YouTubeBar({ track, onClose, onNext, onPrev }: Props) {
     }
   }, [playing])
 
+  // player accent always follows the playing track's own category colour
+  const accent = { '--state': categoryColor(track.category) } as CSSProperties
+
   return (
     <>
       {/* ───────── mini bar (hosts the live iframe) ───────── */}
-      <div className="fixed inset-x-0 bottom-0 z-20 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5 sm:pb-4">
+      <div
+        className="fixed inset-x-0 bottom-0 z-20 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5 sm:pb-4"
+        style={accent}
+      >
         <div className="glass mx-auto flex max-w-3xl items-center gap-3 rounded-2xl p-2.5 sm:gap-4 sm:p-3">
           {/* small visible player (YouTube ToS) */}
           <div className="yt-slot relative h-12 w-20 shrink-0 overflow-hidden rounded-lg bg-black sm:h-[54px] sm:w-24">
@@ -178,7 +185,10 @@ export default function YouTubeBar({ track, onClose, onNext, onPrev }: Props) {
 
       {/* ───────── full-screen player ───────── */}
       {expanded && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-ink/95 px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] backdrop-blur-2xl">
+        <div
+          className="fixed inset-0 z-50 flex flex-col bg-ink/95 px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] backdrop-blur-2xl"
+          style={accent}
+        >
           <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
             <div className="flex items-center justify-between py-2">
               <button

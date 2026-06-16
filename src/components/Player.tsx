@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import type { Track } from '../data/tracks'
+import { useEffect, useState, type CSSProperties } from 'react'
+import { categoryColor, type Track } from '../data/tracks'
 
 interface Props {
   track: Track | null
@@ -55,10 +55,16 @@ export default function Player({
 
   if (!track) return null
 
+  // player accent always follows the playing track's own category colour
+  const accent = { '--state': categoryColor(track.category) } as CSSProperties
+
   return (
     <>
       {/* ───────── mini bar ───────── */}
-      <div className="fixed inset-x-0 bottom-0 z-20 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5 sm:pb-4">
+      <div
+        className="fixed inset-x-0 bottom-0 z-20 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5 sm:pb-4"
+        style={accent}
+      >
         <div className="glass mx-auto flex max-w-3xl items-center gap-3 rounded-2xl px-3 py-2.5 sm:gap-4 sm:px-4">
           {/* tap artwork + meta to expand */}
           <button
@@ -112,7 +118,10 @@ export default function Player({
 
       {/* ───────── full-screen player ───────── */}
       {expanded && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-ink/95 px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] backdrop-blur-2xl">
+        <div
+          className="fixed inset-0 z-50 flex flex-col bg-ink/95 px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] backdrop-blur-2xl"
+          style={accent}
+        >
           <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
             <div className="flex items-center justify-between py-2">
               <button

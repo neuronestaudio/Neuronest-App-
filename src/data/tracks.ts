@@ -16,6 +16,17 @@ export interface Track {
 
 export const CATEGORIES: Category[] = ['Focus', 'Calm', 'Sleep']
 
+// Category → theme colour. Used so a track's player controls always match the
+// song's own category, regardless of which filter the user is browsing.
+export const categoryColor = (cat: string): string =>
+  cat === 'Focus'
+    ? 'var(--color-focus)'
+    : cat === 'Calm'
+      ? 'var(--color-calm)'
+      : cat === 'Sleep'
+        ? 'var(--color-sleep)'
+        : 'var(--color-accent)'
+
 export const TRACKS: Track[] = [
   {
     id: 'deep-focus',
