@@ -15,6 +15,12 @@ export class AudioEngine {
       el.preload = 'auto'
       el.setAttribute('playsinline', '')
       el.volume = this._volume
+      // Keep the element in the DOM — iOS handles the background/lock-screen
+      // audio session far more reliably for attached media elements.
+      if (typeof document !== 'undefined') {
+        el.style.display = 'none'
+        document.body.appendChild(el)
+      }
       this.el = el
     }
     return this.el
@@ -95,6 +101,24 @@ export class AudioEngine {
     if (!el || !el.src) return
     cancelAnimationFrame(this.fadeRAF)
     el.volume = this._volume
+
+    // iOS tears down the audio session when an element is paused while the
+    // screen is locked; a plain play() then advances the timeline but stays
+    // silent (no audio route). Re-priming the pipeline (load + seek back)
+    // re-activates output. Only needed while hidden — keep foreground instant.
+    if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
+      const at = el.currentTime
+      const restore = () => {
+        try {
+          el.currentTime = at
+        } catch {
+          /* seek not ready — loop will just resume from 0, but with sound */
+        }
+        el.removeEventListener('loadedmetadata', restore)
+      }
+      el.addEventListener('loadedmetadata', restore)
+      el.load()
+    }
     void el.play()
   }
 
