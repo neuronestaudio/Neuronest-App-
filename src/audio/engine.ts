@@ -80,21 +80,32 @@ export class AudioEngine {
     }
   }
 
+  /** Pause but keep the playback position (resume continues from here). */
+  pause() {
+    const el = this.el
+    if (!el) return
+    cancelAnimationFrame(this.fadeRAF)
+    el.volume = this._volume // undo any in-flight fade so resume isn't silent
+    el.pause()
+  }
+
+  /** Resume the current track from where it was paused. */
+  resume() {
+    const el = this.el
+    if (!el || !el.src) return
+    cancelAnimationFrame(this.fadeRAF)
+    el.volume = this._volume
+    void el.play()
+  }
+
+  /** Stop and reset to the start (used when switching away entirely). */
   stop() {
     const el = this.el
     if (!el) return
     cancelAnimationFrame(this.fadeRAF)
-    if (this.canFade) {
-      this.rampTo(0, 250, () => {
-        el.pause()
-        el.currentTime = 0
-        el.volume = this._volume
-      })
-    } else {
-      el.pause() // locked screen: pause immediately
-      el.currentTime = 0
-      el.volume = this._volume
-    }
+    el.pause()
+    el.currentTime = 0
+    el.volume = this._volume
   }
 }
 

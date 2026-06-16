@@ -103,14 +103,23 @@ export default function App() {
     setCuratedTrack(track)
   }
 
+  // Absolute play/pause that never read isPlaying — safe for the lock-screen
+  // Media Session handlers (whose closures can go stale while the screen is
+  // locked). Pause keeps the playback position; resume continues from it.
+  function pausePlayback() {
+    engine.pause()
+    setIsPlaying(false)
+  }
+  function resumePlayback() {
+    if (!active) return
+    engine.resume()
+    setIsPlaying(true)
+  }
+
   function selectTrack(track: Track) {
     if (active?.id === track.id) {
-      if (isPlaying) {
-        engine.stop()
-        setIsPlaying(false)
-      } else {
-        startTrack(track)
-      }
+      if (isPlaying) pausePlayback()
+      else resumePlayback()
       return
     }
     setActive(track)
@@ -119,12 +128,8 @@ export default function App() {
 
   function togglePlay() {
     if (!active) return
-    if (isPlaying) {
-      engine.stop()
-      setIsPlaying(false)
-    } else {
-      startTrack(active)
-    }
+    if (isPlaying) pausePlayback()
+    else resumePlayback()
   }
 
   // Prev/next, used by the full-screen players and the lock-screen controls.
@@ -384,6 +389,8 @@ export default function App() {
         isPlaying={isPlaying}
         volume={volume}
         onTogglePlay={togglePlay}
+        onPlay={resumePlayback}
+        onPause={pausePlayback}
         onVolume={setVolume}
         onNext={() => skip(1)}
         onPrev={() => skip(-1)}

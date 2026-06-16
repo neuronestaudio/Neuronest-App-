@@ -6,6 +6,8 @@ interface Props {
   isPlaying: boolean
   volume: number
   onTogglePlay: () => void
+  onPlay: () => void
+  onPause: () => void
   onVolume: (v: number) => void
   onNext: () => void
   onPrev: () => void
@@ -28,24 +30,27 @@ export default function Player({
   isPlaying,
   volume,
   onTogglePlay,
+  onPlay,
+  onPause,
   onVolume,
   onNext,
   onPrev,
 }: Props) {
   const [expanded, setExpanded] = useState(false)
 
-  // Lock-screen / OS controls for the generative engine (Web Audio keeps
-  // running in the background). App owns next/prev + metadata.
+  // Lock-screen / OS controls. These MUST be absolute (play = play, pause =
+  // pause) — not a toggle — because a toggle reads isPlaying from a closure that
+  // can go stale while the screen is locked, inverting the action (silent play).
   useEffect(() => {
     if (!track || !('mediaSession' in navigator)) return
     const ms = navigator.mediaSession
-    ms.setActionHandler('play', () => onTogglePlay())
-    ms.setActionHandler('pause', () => onTogglePlay())
+    ms.setActionHandler('play', () => onPlay())
+    ms.setActionHandler('pause', () => onPause())
     return () => {
       ms.setActionHandler('play', null)
       ms.setActionHandler('pause', null)
     }
-  }, [track, onTogglePlay])
+  }, [track, onPlay, onPause])
 
   useEffect(() => {
     if (track && 'mediaSession' in navigator) {
