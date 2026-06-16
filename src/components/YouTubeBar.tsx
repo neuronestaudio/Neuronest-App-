@@ -183,31 +183,42 @@ export default function YouTubeBar({ track, onClose, onNext, onPrev }: Props) {
         </div>
       </div>
 
-      {/* ───────── full-screen player ───────── */}
+      {/* ───────── full-screen player (liquid glass) ───────── */}
       {expanded && (
         <div
-          className="fixed inset-0 z-50 flex flex-col bg-ink/95 px-6 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] backdrop-blur-2xl"
+          className="fixed inset-0 z-50 flex flex-col px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]"
           style={accent}
         >
-          <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
+          {/* vibrant backdrop: blown-up blurred thumbnail + state-colour wash */}
+          <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+            <img
+              src={ytThumb(track.id)}
+              alt=""
+              className="absolute inset-0 h-full w-full scale-150 object-cover opacity-55 blur-3xl"
+            />
+            <div className="player-veil absolute inset-0" />
+            <div className="absolute inset-0 bg-ink/45 backdrop-blur-2xl" />
+          </div>
+
+          <div className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col">
             <div className="flex items-center justify-between py-2">
               <button
                 onClick={() => setExpanded(false)}
-                className="grid h-10 w-10 place-items-center rounded-full text-muted transition hover:bg-surface-2 hover:text-text"
+                className="glass-soft grid h-10 w-10 place-items-center rounded-full text-text transition hover:scale-105 active:scale-95"
                 aria-label="Minimize player"
               >
                 <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
                   <path d="M7 10l5 5 5-5z" />
                 </svg>
               </button>
-              <span className="text-xs font-semibold uppercase tracking-widest text-muted">
+              <span className="text-xs font-semibold uppercase tracking-widest text-white/70">
                 Now Playing
               </span>
               <a
                 href={ytWatch(track.id)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="grid h-10 w-10 place-items-center rounded-full text-muted transition hover:bg-surface-2 hover:text-text"
+                className="glass-soft grid h-10 w-10 place-items-center rounded-full text-text transition hover:scale-105 active:scale-95"
                 aria-label="Watch on YouTube"
               >
                 <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
@@ -216,41 +227,46 @@ export default function YouTubeBar({ track, onClose, onNext, onPrev }: Props) {
               </a>
             </div>
 
-            {/* big album art (YouTube thumbnail) */}
-            <div className="flex flex-1 items-center justify-center py-6">
-              <div className="relative aspect-square w-full max-w-sm overflow-hidden rounded-[2rem] bg-black shadow-[0_40px_80px_-30px_rgba(0,0,0,0.9)]">
+            {/* big album art with a coloured glow halo */}
+            <div className="relative flex flex-1 items-center justify-center py-6">
+              <div
+                className="absolute h-64 w-64 rounded-full opacity-70 blur-3xl"
+                style={{ background: 'var(--state)' }}
+                aria-hidden="true"
+              />
+              <div className="relative aspect-square w-full max-w-sm overflow-hidden rounded-[2rem] bg-black shadow-[0_40px_90px_-28px_rgba(0,0,0,0.9)] ring-1 ring-white/15">
                 <img src={ytThumb(track.id)} alt={track.title} className="h-full w-full object-cover" />
                 <span className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               </div>
             </div>
 
-            <div className="mb-6">
+            {/* glass control deck */}
+            <div className="glass-panel rounded-[1.75rem] p-5">
               <p className="font-display text-2xl font-semibold">{track.title}</p>
-              <p className="mt-1 text-sm text-muted">
+              <p className="mt-1 text-sm text-white/65">
                 {track.artist} · <span className="text-accent">YouTube</span>
               </p>
-            </div>
 
-            {/* transport */}
-            <div className="mb-10 flex items-center justify-center gap-8">
-              <button onClick={onPrev} className="text-text/90 transition hover:scale-110 active:scale-95" aria-label="Previous">
-                <svg viewBox="0 0 24 24" className="h-9 w-9 fill-current">
-                  <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
-                </svg>
-              </button>
-              <button
-                onClick={toggle}
-                disabled={!ready}
-                className="accent-fill accent-glow-lg grid h-20 w-20 place-items-center rounded-full transition hover:scale-105 active:scale-95 disabled:opacity-50"
-                aria-label={playing ? 'Pause' : 'Play'}
-              >
-                <PlayPauseIcon playing={playing} className="h-9 w-9 fill-current" />
-              </button>
-              <button onClick={onNext} className="text-text/90 transition hover:scale-110 active:scale-95" aria-label="Next">
-                <svg viewBox="0 0 24 24" className="h-9 w-9 fill-current">
-                  <path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z" />
-                </svg>
-              </button>
+              <div className="mt-6 flex items-center justify-center gap-8">
+                <button onClick={onPrev} className="text-white/90 transition hover:scale-110 active:scale-95" aria-label="Previous">
+                  <svg viewBox="0 0 24 24" className="h-9 w-9 fill-current">
+                    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+                  </svg>
+                </button>
+                <button
+                  onClick={toggle}
+                  disabled={!ready}
+                  className="accent-fill accent-glow-lg grid h-20 w-20 place-items-center rounded-full transition hover:scale-105 active:scale-95 disabled:opacity-50"
+                  aria-label={playing ? 'Pause' : 'Play'}
+                >
+                  <PlayPauseIcon playing={playing} className="h-9 w-9 fill-current" />
+                </button>
+                <button onClick={onNext} className="text-white/90 transition hover:scale-110 active:scale-95" aria-label="Next">
+                  <svg viewBox="0 0 24 24" className="h-9 w-9 fill-current">
+                    <path d="M16 6h2v12h-2zM6 6l8.5 6L6 18z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>

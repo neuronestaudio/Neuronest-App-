@@ -55,19 +55,35 @@ body {
 }
 
 /* ───────────────────────── Ambient background ───────────────────────── */
-/* Soft, low-saturation color wash — tasteful, not the loud AI gradient. */
-.app-aurora::before {
+/* Scattered radial glows tinted to the active state colour (--state) — gives
+   the page vibrance/character and re-themes as the user switches states. */
+.app-aurora::before,
+.app-aurora::after {
   content: "";
   position: fixed;
-  inset: -30% -10% auto -10%;
-  height: 75vh;
-  background:
-    radial-gradient(38% 55% at 18% 12%, rgba(30, 215, 96, 0.16), transparent 70%),
-    radial-gradient(36% 50% at 88% 6%, rgba(22, 163, 74, 0.12), transparent 72%),
-    radial-gradient(45% 40% at 55% 0%, rgba(30, 215, 96, 0.08), transparent 75%);
-  filter: blur(30px) saturate(120%);
+  inset: 0;
   pointer-events: none;
   z-index: 0;
+  filter: blur(48px) saturate(130%);
+  transition: background 0.6s ease;
+}
+.app-aurora::before {
+  background:
+    radial-gradient(32% 34% at 14% 16%, color-mix(in srgb, var(--state, var(--color-accent)) 26%, transparent), transparent 70%),
+    radial-gradient(30% 30% at 84% 22%, color-mix(in srgb, var(--state, var(--color-accent)) 20%, transparent), transparent 72%),
+    radial-gradient(34% 34% at 72% 80%, color-mix(in srgb, var(--state, var(--color-accent)) 16%, transparent), transparent 72%);
+  animation: drift 28s ease-in-out infinite;
+}
+.app-aurora::after {
+  background:
+    radial-gradient(26% 28% at 30% 86%, color-mix(in srgb, var(--state, var(--color-accent)) 18%, transparent), transparent 72%),
+    radial-gradient(22% 24% at 92% 60%, color-mix(in srgb, var(--state, var(--color-accent)) 14%, transparent), transparent 74%),
+    radial-gradient(24% 26% at 6% 54%, color-mix(in srgb, var(--state, var(--color-accent)) 13%, transparent), transparent 74%);
+  animation: drift 36s ease-in-out infinite reverse;
+}
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(2.5%, -2%, 0); }
 }
 
 /* Fine grain overlay to break digital flatness (fixed, never interactive). */
@@ -96,6 +112,26 @@ body {
     inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
     inset 0 0 0 1px rgba(255, 255, 255, 0.015),
     0 18px 40px -20px rgba(4, 5, 18, 0.8);
+}
+
+/* Heavy frosted "liquid glass" panel for the full-screen player. */
+.glass-panel {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.035));
+  backdrop-filter: blur(42px) saturate(170%);
+  -webkit-backdrop-filter: blur(42px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 40px -10px rgba(255, 255, 255, 0.06),
+    0 40px 90px -30px rgba(0, 0, 0, 0.85);
+}
+
+/* State-coloured glow wash behind the full-screen player content. */
+.player-veil {
+  background:
+    radial-gradient(60% 48% at 50% 26%, color-mix(in srgb, var(--state, var(--color-accent)) 40%, transparent), transparent 72%),
+    radial-gradient(48% 40% at 14% 82%, color-mix(in srgb, var(--state, var(--color-accent)) 28%, transparent), transparent 74%),
+    radial-gradient(48% 40% at 88% 72%, color-mix(in srgb, var(--state, var(--color-accent)) 24%, transparent), transparent 74%);
 }
 
 /* Lighter glass for inline chips / small controls. */
