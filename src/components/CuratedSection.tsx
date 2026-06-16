@@ -58,7 +58,7 @@ export default function CuratedSection({ onPlay, activeId, filter, view }: Props
                 />
               </div>
               <div className="min-w-0 flex-1">
-                <p className={`truncate text-sm font-semibold ${activeId === track.id ? 'text-accent' : 'text-text'}`}>
+                <p className={`truncate text-sm font-semibold ${activeId === track.id ? 'accent-text' : 'text-text'}`}>
                   {track.title}
                 </p>
                 <p className="truncate text-xs text-muted">{track.artist}</p>

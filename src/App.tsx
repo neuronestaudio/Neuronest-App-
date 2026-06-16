@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { engine } from './audio/engine'
 import { TRACKS, type Track } from './data/tracks'
 import { FOCUS_PRESETS } from './data/focusPresets'
@@ -183,7 +183,10 @@ export default function App() {
   const state = STATES[filter]
 
   return (
-    <div className="app-aurora relative min-h-full">
+    <div
+      className="app-aurora relative min-h-full"
+      style={{ '--state': state.color } as CSSProperties}
+    >
       <div className="grain" aria-hidden="true" />
 
       {/* sticky glass header — pads for the device notch / status bar (safe-area) */}
@@ -200,28 +203,30 @@ export default function App() {
             </span>
           </button>
 
-          {/* single ergonomic toggle — one tap always flips to the other view */}
+          {/* single ergonomic toggle — one tap always flips to the other view.
+              Equal-width columns keep the raised knob perfectly aligned. */}
           <button
             onClick={() => go(route === 'pomodoro' ? 'home' : 'pomodoro')}
             role="switch"
             aria-checked={route === 'pomodoro'}
             aria-label="Toggle Home / Pomodoro"
-            className="glass-soft relative flex items-center rounded-full p-1 text-sm font-semibold"
+            className="nav-toggle relative inline-grid grid-cols-2 items-center rounded-full p-1 text-sm font-semibold"
           >
+            {/* recessed track is the button bg; this is the raised gradient knob */}
             <span
-              className="absolute top-1 bottom-1 w-[calc(50%-0.25rem)] rounded-full bg-text transition-transform duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)]"
+              className="nav-knob pointer-events-none absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full transition-transform duration-300 ease-[cubic-bezier(0.2,0.7,0.2,1)]"
               style={{ transform: route === 'pomodoro' ? 'translateX(100%)' : 'translateX(0)' }}
               aria-hidden="true"
             />
-            <span className={`relative z-10 px-3.5 py-1 transition-colors ${route !== 'pomodoro' ? 'text-ink' : 'text-muted'}`}>
+            <span className={`relative z-10 px-4 py-1.5 text-center transition-colors duration-200 ${route !== 'pomodoro' ? 'text-ink' : 'text-muted'}`}>
               Home
             </span>
-            <span className={`relative z-10 flex items-center gap-1.5 px-3.5 py-1 transition-colors ${route === 'pomodoro' ? 'text-ink' : 'text-muted'}`}>
+            <span className={`relative z-10 px-4 py-1.5 text-center transition-colors duration-200 ${route === 'pomodoro' ? 'text-ink' : 'text-muted'}`}>
               Pomodoro
-              {session.phase === 'focusing' && route !== 'pomodoro' && (
-                <span className="h-1.5 w-1.5 rounded-full bg-focus" />
-              )}
             </span>
+            {session.phase === 'focusing' && route !== 'pomodoro' && (
+              <span className="absolute right-2 top-1.5 h-2 w-2 rounded-full bg-focus ring-2 ring-ink" aria-hidden="true" />
+            )}
           </button>
 
           <span className="hidden rounded-full px-3 py-1 text-[11px] font-medium text-muted sm:inline-block">
@@ -230,6 +235,8 @@ export default function App() {
         </div>
       </header>
 
+      {/* keyed wrapper → content fades in when the mode (Home/Pomodoro) flips */}
+      <div key={route} className="fade-swap">
       {route === 'pomodoro' ? (
         <PomodoroApp
           session={session}
@@ -242,13 +249,16 @@ export default function App() {
           {/* hero — copy + accent colour re-theme per active state */}
           <section className="rise mb-12">
             <p className="text-sm font-medium text-muted">{greeting}.</p>
-            <h1 className="mt-2 max-w-2xl text-balance font-display text-[2.6rem] font-semibold leading-[1.04] tracking-[-0.03em] sm:text-6xl">
-              {state.pre}{' '}
-              <span style={{ color: state.color }}>{state.accent}</span>
-            </h1>
-            <p className="mt-5 max-w-md text-pretty text-[15px] leading-relaxed text-muted">
-              {state.sub}
-            </p>
+            {/* keyed by state → headline + subcopy fade/swap when the state changes */}
+            <div key={filter} className="fade-swap">
+              <h1 className="mt-2 max-w-2xl text-balance font-display text-[2.6rem] font-semibold leading-[1.04] tracking-[-0.03em] sm:text-6xl">
+                {state.pre}{' '}
+                <span style={{ color: state.color }}>{state.accent}</span>
+              </h1>
+              <p className="mt-5 max-w-md text-pretty text-[15px] leading-relaxed text-muted">
+                {state.sub}
+              </p>
+            </div>
             {!active && !curatedTrack && (
               <button
                 onClick={() => selectTrack(TRACKS[0])}
@@ -338,6 +348,7 @@ export default function App() {
           </div>
         </main>
       )}
+      </div>
 
       {/* feedback launcher — always reachable, sits above the player bar */}
       <button

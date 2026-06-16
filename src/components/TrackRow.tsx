@@ -37,7 +37,7 @@ export default function TrackRow({ track, isActive, isPlaying, onToggle }: Props
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className={`truncate text-sm font-semibold ${isActive ? 'text-accent' : 'text-text'}`}>
+        <p className={`truncate text-sm font-semibold ${isActive ? 'accent-text' : 'text-text'}`}>
           {track.title}
         </p>
         <p className="truncate text-xs text-muted">{track.subtitle}</p>

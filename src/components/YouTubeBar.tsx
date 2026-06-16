@@ -160,7 +160,7 @@ export default function YouTubeBar({ track, onClose, onNext, onPrev }: Props) {
           <button
             onClick={toggle}
             disabled={!ready}
-            className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-accent text-ink shadow-[0_8px_22px_-10px_rgba(30,215,96,0.8)] transition hover:scale-105 active:scale-95 disabled:opacity-50"
+            className="accent-fill accent-glow grid h-12 w-12 shrink-0 place-items-center rounded-full transition hover:scale-105 active:scale-95 disabled:opacity-50"
             aria-label={playing ? 'Pause' : 'Play'}
           >
             <PlayPauseIcon playing={playing} className="h-5 w-5 fill-current" />
@@ -231,7 +231,7 @@ export default function YouTubeBar({ track, onClose, onNext, onPrev }: Props) {
               <button
                 onClick={toggle}
                 disabled={!ready}
-                className="grid h-20 w-20 place-items-center rounded-full bg-accent text-ink shadow-[0_16px_40px_-12px_rgba(30,215,96,0.8)] transition hover:scale-105 active:scale-95 disabled:opacity-50"
+                className="accent-fill accent-glow-lg grid h-20 w-20 place-items-center rounded-full transition hover:scale-105 active:scale-95 disabled:opacity-50"
                 aria-label={playing ? 'Pause' : 'Play'}
               >
                 <PlayPauseIcon playing={playing} className="h-9 w-9 fill-current" />
