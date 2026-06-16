@@ -1,4 +1,11 @@
-import type { SoundOptions, SoundType } from '../audio/engine'
+// Describes how each loop was synthesised (see scripts/render-loops.mjs).
+// Kept as metadata on each track; the runtime engine now plays rendered files.
+export type SoundType = 'white' | 'pink' | 'brown' | 'binaural' | 'drone'
+export interface SoundOptions {
+  carrier?: number
+  beat?: number
+  cutoff?: number
+}
 
 export type Category = 'Focus' | 'Calm' | 'Sleep'
 

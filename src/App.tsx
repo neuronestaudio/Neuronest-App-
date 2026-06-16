@@ -27,7 +27,7 @@ const STATES: Record<StateKey, { color: string; pre: string; accent: string; sub
     color: 'var(--color-accent)',
     pre: 'Sound-engineered focus,',
     accent: 'on demand.',
-    sub: 'Pick a soundscape and drop in. Every generated sound is made live on your device — no streaming, no buffering.',
+    sub: 'Pick a soundscape and drop in. Engineered focus audio that loops seamlessly and keeps playing — even with your screen locked.',
   },
   Focus: {
     color: 'var(--color-focus)',
@@ -89,7 +89,7 @@ export default function App() {
 
   function startTrack(track: Track) {
     setCuratedTrack(null) // stop any curated YouTube track first
-    engine.play(track.type, track.options)
+    engine.play(track.id)
     setIsPlaying(true)
     if (!playedTracks.current.has(track.id)) {
       playedTracks.current.add(track.id)
@@ -162,6 +162,7 @@ export default function App() {
         title: active.title,
         artist: active.subtitle,
         album: 'NeuroNest',
+        artwork: [{ src: '/icon-512.png', sizes: '512x512', type: 'image/png' }],
       })
     } else {
       ms.metadata = null

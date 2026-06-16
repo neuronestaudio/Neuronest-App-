@@ -18,7 +18,7 @@ export default function Dashboard({ activeId, isPlaying, filter, view, onToggle 
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="font-display text-lg font-semibold">Generated Soundscapes</h2>
-          <p className="mt-0.5 text-xs text-muted">Made live on your device — no streaming.</p>
+          <p className="mt-0.5 text-xs text-muted">Seamless loops — keep playing on the lock screen.</p>
         </div>
         <span className="text-xs text-muted">{visible.length} tracks</span>
       </div>
